@@ -1,2 +1,2 @@
 # weather-forecast
-Web app show casing angular
+Web app showcasing angular
