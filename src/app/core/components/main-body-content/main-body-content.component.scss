@@ -1,0 +1,18 @@
+@import './../../../../assets/styles/variables';
+@import './../../../../assets/styles/mixins-media';
+ .body-content{
+	.content-title{
+        @include sm {
+            flex-direction: column-reverse;
+        }
+        @include lg {
+            flex-direction: row;
+        }
+        .profile-photo-body{
+            width: 350px;
+            height: 350px;
+            margin-bottom: 30px;
+        }
+        margin: 20 0 20 0;
+    }
+}

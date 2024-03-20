@@ -1,0 +1,29 @@
+<ng-container *ngIf="errorMessage$|async as errorMessage">
+	<ng-container *ngIf="errorMessage && location === errorMessage.showErrorLocationLevel">
+		<div class="alert alert-dismissible alert-danger"
+			[ngClass]="errorMessage.severity === 'warning' ? 'alert-warning' : 'alert-danger'">
+			<button type="button" class="btn-close" data-bs-dismiss="alert"(click)="close()"></button>
+
+			<div class="d-flex flex-stack flex-grow-1">
+				<div class="fw-bold">
+					<h3 class="m-0">{{errorMessage.title}}</h3>
+					<div class="fs-6 ">
+						<ng-container
+							*ngTemplateOutlet="isMessages(errorMessage.message) ? messagesTemp : messageTemp; context: { $implicit: errorMessage.message }">
+						</ng-container>
+					</div>
+					<ng-template #messageTemp let-msg>
+						{{msg}}
+					</ng-template>
+					<ng-template #messagesTemp let-messages>
+						<ul class="mb-0">
+							<li *ngFor="let msg of messages">{{msg}}</li>
+						</ul>
+					</ng-template>
+				</div>
+			</div>
+
+		</div>
+
+	</ng-container>
+</ng-container>
