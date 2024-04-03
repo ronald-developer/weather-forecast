@@ -6,6 +6,9 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { HttpClientModule } from '@angular/common/http';
+import { environment as env} from "src/environments/environment.development";
+import { OPEN_WEATHER_MAP_URL_CONFIG } from './core/injection-tokens/injection-token-configurations';
+export const openWeatherApiUrl = `${env.externalApiUrls.openWeatherApi.url}`;
 
 @NgModule({
   declarations: [
@@ -18,7 +21,9 @@ import { HttpClientModule } from '@angular/common/http';
     CoreModule,
 	PageNotFoundComponent
   ],
-  providers: [],
+  providers: [
+	{ provide: OPEN_WEATHER_MAP_URL_CONFIG, useValue: { composeUrl: (endpoint: string, token: string = openWeatherApiUrl) => `${token}/${endpoint}` } },
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

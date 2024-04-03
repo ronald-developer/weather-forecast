@@ -13,23 +13,28 @@
 				<div class="row gy-3">
 					<div class="col-lg-10 col-sm-12">
 						<input id="search-city" formControlName="locationName" type="text" class="form-control"
-							placeholder="City name">
+							placeholder="City name" (keyup.enter)="search()">
 					</div>
 					<div class="col-lg-2 col-sm-12">
 						<button type="button" class="btn btn-primary col-12" (click)="search()">Search</button>
 					</div>
 
 					<!-- country code options with state. we could separate the state to its own dropdown, but the city name is not unique across state -->
-					<div class="col-lg-12" *ngIf="geocodingDropdownViewModel.length">
-						<label for="country-code" class="form-label text-muted">Country code and state</label>
-						<select id="country-code" class="form-select" formControlName="id">
-							<option [value]="''" selected disabled>Select country code and state</option>
-							<ng-container *ngFor="let i of geocodingDropdownViewModel">
-								<option *ngIf="i.state" [value]="i.id">{{i.country}} - {{i.state}}</option>
-								<option *ngIf="!i.state" [value]="i.id">{{i.country}}</option>
-							</ng-container>
-						</select>
-					</div>
+					@if (geocodingDropdownViewModel.length) {
+						<div class="col-lg-12">
+							<label for="country-code" class="form-label text-muted">Country code and state</label>
+							<select id="country-code" class="form-select" formControlName="id">
+								<option [value]="''" selected disabled>Select country code and state</option>
+								@for (i of geocodingDropdownViewModel; track $index) {
+									@if (i.state) {
+										<option [value]="i.id">{{i.country}} - {{i.state}}</option>
+									}@else {
+										<option [value]="i.id">{{i.country}}</option>
+									}
+								}
+							</select>
+						</div>
+					}
 
 					<div class="ml-4">
 						<div class="form-check form-switch">
@@ -49,21 +54,23 @@
 			</form>
 		</div>
 	</div>
-	<div class="weather-result" *ngIf="locationWeatherForecast$ |async as forecast">
-		<ng-container *ngIf="forecast">
-			<div class="card flex-row" *ngFor="let weather of forecast.weather">
-				<img class="card-img-left object-fit-cover" src="https://openweathermap.org/img/wn/{{weather.icon}}@2x.png" />
-				<div class="card-body position-relative">
-					<h4 class="card-title h5 h4-sm">{{weather.description|uppercase}}</h4>
-					<span class="badge bg-info position-absolute top-0 end-0 m-1">current</span>
+	<div class="weather-result d-flex flex-column gap-3" *ngIf="locationWeatherForecast$ |async as forecast">
+		@if (forecast) {
+			@for (weather of forecast.weather; track $index) {
+				<div class="card flex-row">
+					<img class="card-img-left object-fit-contain" src="https://openweathermap.org/img/wn/{{weather.icon}}@2x.png" />
+					<div class="card-body position-relative">
+						<h4 class="card-title h5 h4-sm">{{weather.description|uppercase}}</h4>
+						<span class="badge bg-info position-absolute top-0 end-0 m-1">current</span>
 
-					<div class="weather-info">
-						<span class="badge bg-primary">{{forecast.main.temp}} &deg;C</span>
-						<span> temperature from {{forecast.main.temp_min}} &deg;{{temperatureUnit}} to {{forecast.main.temp_min}} &deg;{{temperatureUnit}}, wind {{forecast.wind.speed}} m/s. clouds {{forecast.clouds.all}} %, huidity {{forecast.main.humidity}} %, {{forecast.main.pressure}} hpa.</span>
+						<div class="weather-info">
+							<span class="badge bg-primary">{{forecast.main.temp}} &deg;C</span>
+							<span> temperature from {{forecast.main.temp_min}} &deg;{{temperatureUnit}} to {{forecast.main.temp_min}} &deg;{{temperatureUnit}}, wind {{forecast.wind.speed}} m/s. clouds {{forecast.clouds.all}} %, huidity {{forecast.main.humidity}} %, {{forecast.main.pressure}} hpa.</span>
+						</div>
 					</div>
 				</div>
-			</div>
-		</ng-container>
+			}
+		}
 	</div>
 
 </div>
